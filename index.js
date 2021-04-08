@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const axios = require('axios');
-const port = 3000
+let port = process.env.PORT || 3000
 
 app.use(express.json());
 
