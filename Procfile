@@ -1,1 +1,1 @@
-web: node index.js
+web: npm install nodemailer && node index.js
