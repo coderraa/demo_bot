@@ -1,1 +1,1 @@
-web: node index.js
+web: npm audit fix && node index.js
