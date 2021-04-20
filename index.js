@@ -17,9 +17,9 @@ const transporter = nodemailer.createTransport({
 
 app.use(express.json());
 
-async function lastbillpaid() {
+async function lastbillpaid(a) {
   try {
-    const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid=0009000414');
+    const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
     console.log(response.status);
     return "Your pending amount of "+response.data.last_bill_paid.date+" is "+response.data.last_bill_paid.amount
   } catch (error) {
@@ -28,9 +28,9 @@ async function lastbillpaid() {
   }
 }
 
-async function nextbilldue() {
+async function nextbilldue(a) {
   try {
-    const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid=0009000414');
+    const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
     console.log(response.status);
     return "Your Next Bill Due amount of "+response.data.next_bill_due.dueDate+" is "+response.data.next_bill_due.amount 
   } catch (error) {
@@ -39,9 +39,9 @@ async function nextbilldue() {
   }
 }
 
-async function soa() {
+async function soa(a) {
   try {
-    const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid=0009000414');
+    const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
     console.log(response.status);
     return response.data.total_outstanding.outstanding
   } catch (error) {
@@ -53,7 +53,7 @@ async function soa() {
 app.post('/', (req, res) => {
   console.log(req.body)//this will print request data from dialogflow bot
   if(req.body.queryResult.parameters.Trigger_entity=='Last Bill'){
-    lastbillpaid().then(function(resp) {
+    lastbillpaid(req.body.queryResult.parameters['phone-number']).then(function(resp) {
     console.log(resp)//resp is reponse from get api, 
     //res.send will send this to dialogflow
     res.send({
@@ -68,7 +68,7 @@ app.post('/', (req, res) => {
   })}
 
   else if(req.body.queryResult.parameters.Trigger_entity=='Next Bill'){
-    nextbilldue().then(function(resp) {
+    nextbilldue(req.body.queryResult.parameters['phone-number']).then(function(resp) {
       console.log(resp)//resp is reponse from get api, 
       //res.send will send this to dialogflow
       res.send({
@@ -83,7 +83,7 @@ app.post('/', (req, res) => {
     })}
   
   else if(req.body.queryResult.intent.displayName=='Others mail trigger'){
-    nextbilldue().then(function(resp) {
+    nextbilldue(req.body.queryResult.parameters['phone-number']).then(function(resp) {
       console.log(resp)//resp is reponse from get api, 
       const mailOptions = {
         from: "cokeaglapp@gmail.com", // sender address
@@ -110,7 +110,7 @@ app.post('/', (req, res) => {
     })}
 
     else if(req.body.queryResult.intent.displayName=='Others Cooler mail trigger'){
-      nextbilldue().then(function(resp) {
+      nextbilldue(req.body.queryResult.parameters['phone-number']).then(function(resp) {
         console.log(resp)//resp is reponse from get api, 
         const mailOptions = {
           from: "cokeaglapp@gmail.com", // sender address
@@ -137,7 +137,7 @@ app.post('/', (req, res) => {
       })}
 
     else if(req.body.queryResult.parameters.Trigger_entity=='SOA'){
-      soa().then(function(resp) {
+      soa(req.body.queryResult.parameters['phone-number']).then(function(resp) {
         console.log(resp)//resp is reponse from get api, 
         //res.send will send this to dialogflow
         res.send({
