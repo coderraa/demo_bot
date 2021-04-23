@@ -4,16 +4,6 @@ const nodemailer = require("nodemailer");
 const axios = require('axios');
 let port = process.env.PORT || 3000
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    type: 'OAuth2',
-      user: 'cokeaglapp@gmail.com',
-      pass: 'Cola@2019Dev'
-  }
-});
-
-
 
 app.use(express.json());
 
@@ -21,7 +11,7 @@ async function lastbillpaid(a) {
   try {
     const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
     console.log(response.status);
-    return "Your pending amount of is "+response.data.last_bill_paid.amount.msg
+    return "Your pending amount of is "+response.data.last_bill_paid.msg
   } catch (error) {
     console.error(error);
     return error
@@ -118,7 +108,7 @@ app.post('/', (req, res) => {
       })
     })}
   
-  else if(req.body.queryResult.parameters.Trigger_entity=='Order Status'){
+  else if(req.body.queryResult.parameters.trigger_entity=='Order Status'){
     orderstatus(req.body.queryResult.parameters['phone-number']).then(function(resp) {
       console.log(resp)//resp is reponse from get api, 
       //res.send will send this to dialogflow
@@ -133,7 +123,7 @@ app.post('/', (req, res) => {
       })
     })}
   
-  else if(req.body.queryResult.parameters.Trigger_entity=='Others Cooler mail trigger'){
+  else if(req.body.queryResult.intent.displayName=='Others Cooler mail trigger'){
       othercomplain(req.body.queryResult.parameters['phone-number'],req.body.queryResult.queryText).then(function(resp) {
         console.log(resp)//resp is reponse from get api, 
         //res.send will send this to dialogflow
@@ -147,8 +137,67 @@ app.post('/', (req, res) => {
           ]
         })
       })}
+
+      else if(req.body.queryResult.intent.displayName=='Door Problem'){
+        coolercomplain(req.body.queryResult.parameters['phone-number'],req.body.queryResult.queryText).then(function(resp) {
+          console.log(resp)//resp is reponse from get api, 
+          //res.send will send this to dialogflow
+          res.send({
+            "fulfillmentMessages": [
+              {
+                "text": {
+                  "text": [JSON.stringify(resp)+" Your Cooler Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
+                }
+              }
+            ]
+          })
+        })}
+        else if(req.body.queryResult.intent.displayName=='Light Not Working'){
+          coolercomplain(req.body.queryResult.parameters['phone-number'],req.body.queryResult.queryText).then(function(resp) {
+            console.log(resp)//resp is reponse from get api, 
+            //res.send will send this to dialogflow
+            res.send({
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [JSON.stringify(resp)+" Your Cooler Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
+                  }
+                }
+              ]
+            })
+          })}
+
+          else if(req.body.queryResult.intent.displayName=='Water Leakage'){
+            coolercomplain(req.body.queryResult.parameters['phone-number'],req.body.queryResult.queryText).then(function(resp) {
+              console.log(resp)//resp is reponse from get api, 
+              //res.send will send this to dialogflow
+              res.send({
+                "fulfillmentMessages": [
+                  {
+                    "text": {
+                      "text": [JSON.stringify(resp)+" Your Cooler Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
+                    }
+                  }
+                ]
+              })
+            })}
+
+            else if(req.body.queryResult.intent.displayName=='Cooling Issue'){
+              coolercomplain(req.body.queryResult.parameters['phone-number'],req.body.queryResult.queryText).then(function(resp) {
+                console.log(resp)//resp is reponse from get api, 
+                //res.send will send this to dialogflow
+                res.send({
+                  "fulfillmentMessages": [
+                    {
+                      "text": {
+                        "text": [JSON.stringify(resp)+" Your Cooler Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
+                      }
+                    }
+                  ]
+                })
+              })}
   
-  else if(req.body.queryResult.parameters.Trigger_entity=='Others mail trigger'){
+  else if(req.body.queryResult.intent.displayName=='Others mail trigger'){
       othercomplain(req.body.queryResult.parameters['phone-number'],req.body.queryResult.queryText).then(function(resp) {
         console.log(resp)//resp is reponse from get api, 
         //res.send will send this to dialogflow
