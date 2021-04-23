@@ -61,6 +61,31 @@ async function orderstatus(a) {
   }
 }
 
+async function coolercomplain(a,body) {
+  try {
+    const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
+    console.log(response.status);
+    const responsemail = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/sendMail.jsp?customerId='+a+'&body='+body+'&subject=Cooler%20Complain&countryCode='+response.data.country);
+    console.log(responsemail.status);
+    return responsemail.data.msg+"Thank You"
+  } catch (error) {
+    console.error(error);
+    return error
+  }
+}
+async function othercomplain(a,body) {
+  try {
+    const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
+    console.log(response.status);
+    const responsemail = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/sendMail.jsp?customerId='+a+'&body='+body+'&subject=Other%20Complain&countryCode='+response.data.country);
+    console.log(responsemail.status);
+    return responsemail.data.msg+"Thank You"
+  } catch (error) {
+    console.error(error);
+    return error
+  }
+}
+
 app.post('/', (req, res) => {
   console.log(req.body)//this will print request data from dialogflow bot
   if(req.body.queryResult.parameters.Trigger_entity=='Last Bill'){
@@ -108,60 +133,37 @@ app.post('/', (req, res) => {
       })
     })}
   
-  else if(req.body.queryResult.intent.displayName=='Others mail trigger'){
-    nextbilldue(req.body.queryResult.parameters['phone-number']).then(function(resp) {
-      console.log(resp)//resp is reponse from get api, 
-      const mailOptions = {
-        from: "cokeaglapp@gmail.com", // sender address
-        to: "rahul.singh.ds20@gmail.com", // list of receivers
-        subject: "Customer Complain", // Subject line
-        html: req.body.queryResult.queryText
-      };
-      transporter.sendMail(mailOptions, function (err, info) {
-        if(err)
-        {
-          console.log(err);
-        }
-    });
-      //res.send will send this to dialogflow
-      res.send({
-        "fulfillmentMessages": [
-          {
-            "text": {
-              "text": ["Your query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon. Thank You"]
-            }
-          }
-        ]
-      })
-    })}
-
-    else if(req.body.queryResult.intent.displayName=='Others Cooler mail trigger'){
-      nextbilldue(req.body.queryResult.parameters['phone-number']).then(function(resp) {
+  else if(req.body.queryResult.parameters.Trigger_entity=='Others Cooler mail trigger'){
+      othercomplain(req.body.queryResult.parameters['phone-number'],req.body.queryResult.queryText).then(function(resp) {
         console.log(resp)//resp is reponse from get api, 
-        const mailOptions = {
-          from: "cokeaglapp@gmail.com", // sender address
-          to: "rahul.singh.ds20@gmail.com", // list of receivers
-          subject: "Cooler Customer Complain", // Subject line
-          html: req.body.queryResult.queryText
-        };
-        transporter.sendMail(mailOptions, function (err, info) {
-          if(err)
-          {
-            console.log(err);
-          }
-      });
         //res.send will send this to dialogflow
         res.send({
           "fulfillmentMessages": [
             {
               "text": {
-                "text": ["Your Cooler Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon. Thank You"]
+                "text": [JSON.stringify(resp)+" Your Cooler Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
               }
             }
           ]
         })
       })}
-
+  
+  else if(req.body.queryResult.parameters.Trigger_entity=='Others mail trigger'){
+      othercomplain(req.body.queryResult.parameters['phone-number'],req.body.queryResult.queryText).then(function(resp) {
+        console.log(resp)//resp is reponse from get api, 
+        //res.send will send this to dialogflow
+        res.send({
+          "fulfillmentMessages": [
+            {
+              "text": {
+                "text": [JSON.stringify(resp)+" Your Other Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
+              }
+            }
+          ]
+        })
+      })}
+  
+  
     else if(req.body.queryResult.parameters.Trigger_entity=='SOA'){
       soa(req.body.queryResult.parameters['phone-number']).then(function(resp) {
         console.log(resp)//resp is reponse from get api, 
