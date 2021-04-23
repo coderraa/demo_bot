@@ -21,7 +21,7 @@ async function lastbillpaid(a) {
   try {
     const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
     console.log(response.status);
-    return "Your pending amount of "+response.data.last_bill_paid.date+" is "+response.data.last_bill_paid.amount
+    return "Your pending amount of is "+response.data.last_bill_paid.amount.msg
   } catch (error) {
     console.error(error);
     return error
@@ -50,6 +50,17 @@ async function soa(a) {
   }
 }
 
+async function orderstatus(a) {
+  try {
+    const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
+    console.log(response.status);
+    return response.data.order_details.msg
+  } catch (error) {
+    console.error(error);
+    return error
+  }
+}
+
 app.post('/', (req, res) => {
   console.log(req.body)//this will print request data from dialogflow bot
   if(req.body.queryResult.parameters.Trigger_entity=='Last Bill'){
@@ -69,6 +80,21 @@ app.post('/', (req, res) => {
 
   else if(req.body.queryResult.parameters.Trigger_entity=='Next Bill'){
     nextbilldue(req.body.queryResult.parameters['phone-number']).then(function(resp) {
+      console.log(resp)//resp is reponse from get api, 
+      //res.send will send this to dialogflow
+      res.send({
+        "fulfillmentMessages": [
+          {
+            "text": {
+              "text": [JSON.stringify(resp)]
+            }
+          }
+        ]
+      })
+    })}
+  
+  else if(req.body.queryResult.parameters.Trigger_entity=='Order Status'){
+    orderstatus(req.body.queryResult.parameters['phone-number']).then(function(resp) {
       console.log(resp)//resp is reponse from get api, 
       //res.send will send this to dialogflow
       res.send({
