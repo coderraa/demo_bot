@@ -11,7 +11,7 @@ async function lastbillpaid(a) {
   try {
     const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
     console.log(response.status);
-    return "Your pending amount of is "+response.data.last_bill_paid.msg
+    return "Pending Amount Status: "+response.data.last_bill_paid.msg
   } catch (error) {
     console.error(error);
     return error
@@ -33,7 +33,7 @@ async function soa(a) {
   try {
     const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
     console.log(response.status);
-    return response.data.total_outstanding.outstanding
+    return "Outstanding Amount Status: "+response.data.total_outstanding.outstanding
   } catch (error) {
     console.error(error);
     return error
@@ -44,7 +44,7 @@ async function orderstatus(a) {
   try {
     const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
     console.log(response.status);
-    return response.data.order_details.msg
+    return "Order Status: "+response.data.order_details.msg
   } catch (error) {
     console.error(error);
     return error
@@ -57,7 +57,7 @@ async function coolercomplain(a,body) {
     console.log(response.status);
     const responsemail = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/sendMail.jsp?customerId='+a+'&body='+body+'&subject=Cooler%20Complain&countryCode='+response.data.country);
     console.log(responsemail.status);
-    return responsemail.data.msg+"Thank You"
+    return responsemail.data.msg
   } catch (error) {
     console.error(error);
     return error
@@ -69,7 +69,7 @@ async function othercomplain(a,body) {
     console.log(response.status);
     const responsemail = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/sendMail.jsp?customerId='+a+'&body='+body+'&subject=Other%20Complain&countryCode='+response.data.country);
     console.log(responsemail.status);
-    return responsemail.data.msg+"Thank You"
+    return responsemail.data.msg
   } catch (error) {
     console.error(error);
     return error
@@ -131,7 +131,7 @@ app.post('/', (req, res) => {
           "fulfillmentMessages": [
             {
               "text": {
-                "text": [JSON.stringify(resp)+" Your Cooler Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
+                "text": [JSON.stringify(resp)+" Your Cooler Complain query: --"+req.body.queryResult.queryText+"-- has been registered. We will Contact you soon."]
               }
             }
           ]
@@ -146,7 +146,7 @@ app.post('/', (req, res) => {
             "fulfillmentMessages": [
               {
                 "text": {
-                  "text": [JSON.stringify(resp)+" Your Cooler Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
+                  "text": [JSON.stringify(resp)+" Your Cooler Complain query: --"+req.body.queryResult.queryText+"-- has been registered. We will Contact you soon."]
                 }
               }
             ]
@@ -160,7 +160,7 @@ app.post('/', (req, res) => {
               "fulfillmentMessages": [
                 {
                   "text": {
-                    "text": [JSON.stringify(resp)+" Your Cooler Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
+                    "text": [JSON.stringify(resp)+" Your Cooler Complain query: --"+req.body.queryResult.queryText+"-- has been registered. We will Contact you soon."]
                   }
                 }
               ]
@@ -175,7 +175,7 @@ app.post('/', (req, res) => {
                 "fulfillmentMessages": [
                   {
                     "text": {
-                      "text": [JSON.stringify(resp)+" Your Cooler Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
+                      "text": [JSON.stringify(resp)+" Your Cooler Complain query: --"+req.body.queryResult.queryText+"-- has been registered. We will Contact you soon."]
                     }
                   }
                 ]
@@ -190,7 +190,7 @@ app.post('/', (req, res) => {
                   "fulfillmentMessages": [
                     {
                       "text": {
-                        "text": [JSON.stringify(resp)+" Your Cooler Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
+                        "text": [JSON.stringify(resp)+" Your Cooler Complain query: --"+req.body.queryResult.queryText+"-- has been registered. We will Contact you soon."]
                       }
                     }
                   ]
@@ -205,7 +205,7 @@ app.post('/', (req, res) => {
           "fulfillmentMessages": [
             {
               "text": {
-                "text": [JSON.stringify(resp)+" Your Other Complain query: "+req.body.queryResult.queryText+" has been registered. We will Contact you soon."]
+                "text": [JSON.stringify(resp)+" Your Other Complain query: --"+req.body.queryResult.queryText+"-- has been registered. We will Contact you soon."]
               }
             }
           ]
@@ -221,7 +221,7 @@ app.post('/', (req, res) => {
           "fulfillmentMessages": [
             {
               "text": {
-                "text": ["Your Outstanding Amount is "+JSON.stringify(resp)]
+                "text": [JSON.stringify(resp)]
               }
             }
           ]
