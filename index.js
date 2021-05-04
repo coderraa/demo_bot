@@ -131,7 +131,7 @@ app.post('/', (req, res) => {
           "fulfillmentMessages": [
             {
               "text": {
-                "text": [JSON.stringify(resp)+" Your Cooler Complain query: --"+req.body.queryResult.queryText+"-- has been registered. We will Contact you soon."]
+                "text": [JSON.stringify(resp)+" Your Cooler Complain query: --"+req.body.queryResult.parameters.Trigger_entity+"-- has been registered. We will Contact you soon."]
               }
             }
           ]
@@ -146,7 +146,7 @@ app.post('/', (req, res) => {
             "fulfillmentMessages": [
               {
                 "text": {
-                  "text": [JSON.stringify(resp)+" Your Cooler Complain query: --"+req.body.queryResult.queryText+"-- has been registered. We will Contact you soon."]
+                  "text": [JSON.stringify(resp)+" Your Cooler Complain query: --"+req.body.queryResult.parameters.Trigger_entity+"-- has been registered. We will Contact you soon."]
                 }
               }
             ]
@@ -160,7 +160,7 @@ app.post('/', (req, res) => {
               "fulfillmentMessages": [
                 {
                   "text": {
-                    "text": [JSON.stringify(resp)+" Your Cooler Complain query: --"+req.body.queryResult.queryText+"-- has been registered. We will Contact you soon."]
+                    "text": [JSON.stringify(resp)+" Your Cooler Complain query: --"+req.body.queryResult.parameters.Trigger_entity+"-- has been registered. We will Contact you soon."]
                   }
                 }
               ]
