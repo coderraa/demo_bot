@@ -22,7 +22,7 @@ async function nextbilldue(a) {
   try {
     const response = await axios.get('http://qatest.800mycoke.ae:9090/askArwa/getChatResponse.jsp?customerid='+a);
     console.log(response.status);
-    return "Your Next Bill Due amount of "+response.data.next_bill_due.dueDate+" is "+response.data.next_bill_due.amount 
+    return "Next Bill Due Status: "+response.data.next_bill_due.msg
   } catch (error) {
     console.error(error);
     return error
